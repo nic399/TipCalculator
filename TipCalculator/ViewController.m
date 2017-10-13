@@ -8,7 +8,10 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
+@interface ViewController () <UITextFieldDelegate>
+@property (weak, nonatomic) IBOutlet UITextField *billAmountTextField;
+@property (weak, nonatomic) IBOutlet UILabel *tipAmountLabel;
+@property (weak, nonatomic) IBOutlet UITextField *tipPercentageTextField;
 
 @end
 
@@ -17,7 +20,33 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    
+    
 }
+
+- (IBAction)CalculateTip:(id)sender {
+    if (self.billAmountTextField.text.length > 0 && self.tipPercentageTextField.text.length > 0) {
+        double tipAmount = [self.billAmountTextField.text doubleValue] * [self.tipPercentageTextField.text doubleValue] / 100.00;
+        self.tipAmountLabel.text = [@"Tip amount: $" stringByAppendingString:[NSString stringWithFormat:@"%.2f", tipAmount]];
+    }
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSCharacterSet *decimalNumberCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"1234567890."];
+    NSRange testForNonNumbers = [string rangeOfCharacterFromSet:[decimalNumberCharacterSet invertedSet]];
+    
+    if (testForNonNumbers.length == 0) {
+        if ([textField.text containsString:@"."] && [string containsString:@"."]) { //text field already has a decimal point
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+    return true;
+}
+
 
 
 - (void)didReceiveMemoryWarning {
