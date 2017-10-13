@@ -12,6 +12,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *billAmountTextField;
 @property (weak, nonatomic) IBOutlet UILabel *tipAmountLabel;
 @property (weak, nonatomic) IBOutlet UITextField *tipPercentageTextField;
+@property (weak, nonatomic) IBOutlet UISlider *tipPercentSlider;
 
 @end
 
@@ -28,8 +29,19 @@
 - (IBAction)CalculateTip:(id)sender {
     if (self.billAmountTextField.text.length > 0 && self.tipPercentageTextField.text.length > 0) {
         double tipAmount = [self.billAmountTextField.text doubleValue] * [self.tipPercentageTextField.text doubleValue] / 100.00;
-        self.tipAmountLabel.text = [@"Tip amount: $" stringByAppendingString:[NSString stringWithFormat:@"%.2f", tipAmount]];
+        self.tipAmountLabel.text = [@"Tip Amount: $" stringByAppendingString:[NSString stringWithFormat:@"%.2f", tipAmount]];
     }
+    else {
+        self.tipAmountLabel.text = @"Tip Amount: $0.00";
+    }
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField {
+    self.tipPercentSlider.value = [self.tipPercentageTextField.text doubleValue];
+}
+
+- (IBAction)tipSliderAction:(UISlider *)sender {
+    self.tipPercentageTextField.text = [NSString stringWithFormat:@"%.1f", sender.value];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
